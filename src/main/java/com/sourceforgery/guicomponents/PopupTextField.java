@@ -71,10 +71,9 @@ public class PopupTextField extends JDialog {
 		});
 		component.addKeyListener(new KeyListener() {
 
-
 			@Override
 			public void keyTyped(final KeyEvent e) {
-				if ((e.getModifiers() & ~InputEvent.SHIFT_DOWN_MASK) == 0
+				if ((e.getModifiers() & ~InputEvent.SHIFT_DOWN_MASK) == 0 && e.getKeyChar() != KeyEvent.CHAR_UNDEFINED
 						&& (e.getKeyChar() >= '0' || e.getKeyChar() == KeyEvent.VK_BACK_SPACE)) {
 					setVisible(true);
 					textField.dispatchEvent(e);
@@ -83,7 +82,7 @@ public class PopupTextField extends JDialog {
 
 			@Override
 			public void keyPressed(final KeyEvent e) {
-				if ((e.getModifiers() & ~InputEvent.SHIFT_DOWN_MASK) == 0
+				if ((e.getModifiers() & ~InputEvent.SHIFT_DOWN_MASK) == 0 && e.getKeyChar() != KeyEvent.CHAR_UNDEFINED
 						&& (e.getKeyChar() >= '0' || e.getKeyChar() == KeyEvent.VK_BACK_SPACE)) {
 					setVisible(true);
 					textField.dispatchEvent(e);
@@ -92,7 +91,7 @@ public class PopupTextField extends JDialog {
 
 			@Override
 			public void keyReleased(final KeyEvent e) {
-				if ((e.getModifiers() & ~InputEvent.SHIFT_DOWN_MASK) == 0
+				if ((e.getModifiers() & ~InputEvent.SHIFT_DOWN_MASK) == 0 && e.getKeyChar() != KeyEvent.CHAR_UNDEFINED
 						&& (e.getKeyChar() >= '0' || e.getKeyChar() == KeyEvent.VK_BACK_SPACE)) {
 					setVisible(true);
 					textField.dispatchEvent(e);

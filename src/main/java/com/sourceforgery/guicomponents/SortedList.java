@@ -12,12 +12,10 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.swing.JList;
-import javax.swing.ListModel;
 
 public class SortedList<T> extends JList {
 	private static final long serialVersionUID = 1L;
-	private final LinkedList<ListClickListener<T>> clickListeners = new LinkedList<ListClickListener<T>>();
-	private final LinkedList<ListClickListener<T>> doubleClickListeners = new LinkedList<ListClickListener<T>>();
+	private final LinkedList<ListClickAdapter<T>> clickListeners = new LinkedList<ListClickAdapter<T>>();
 	private final SaneListModel<T> listModel;
 	private final PopupTextField popupTextField = new PopupTextField("", (Frame) getTopLevelAncestor(), this);
 	private final InterruptableBackgroundWorkerHandler<String, Void> workerHandler = new InterruptableBackgroundWorkerHandler<String, Void>() {
@@ -39,12 +37,10 @@ public class SortedList<T> extends JList {
 			@Override
 			public void mouseClicked(final MouseEvent e) {
 				JList list = (JList) e.getComponent();
-				ListModel listModel = list.getModel();
 				int index = list.locationToIndex(e.getPoint());
 				if (index != -1) {
-					@SuppressWarnings("unchecked")
 					ListClickMouseEvent<T> listClickMouseEvent = new ListClickMouseEvent<T>(e,
-							(T) listModel.getElementAt(index));
+							getRowData());
 					if (e.getClickCount() == 1) {
 						fireClickListeners(listClickMouseEvent);
 					}
@@ -63,14 +59,14 @@ public class SortedList<T> extends JList {
 	}
 
 	private void fireClickListeners(final ListClickMouseEvent<T> e) {
-		for (ListClickListener<T> al : getClickListeners()) {
-			al.actionPerformed(e);
+		for (ListClickAdapter<T> al : getClickListeners()) {
+			al.singleClickPerformed(e);
 		}
 	}
 
 	private void fireDoubleClickListeners(final ListClickMouseEvent<T> e) {
-		for (ListClickListener<T> al : getDoubleClickListeners()) {
-			al.actionPerformed(e);
+		for (ListClickAdapter<T> al : getClickListeners()) {
+			al.doubleClickPerformed(e);
 		}
 	}
 
@@ -83,15 +79,12 @@ public class SortedList<T> extends JList {
 		});
 	}
 
-	public List<ListClickListener<T>> getClickListeners() {
+	public List<ListClickAdapter<T>> getClickListeners() {
 		return clickListeners;
 	}
 
-	public List<ListClickListener<T>> getDoubleClickListeners() {
-		return doubleClickListeners;
-	}
-
-	public SaneListModel<T> getListModel() {
+	@Override
+	public SaneListModel<T> getModel() {
 		return listModel;
 	}
 
@@ -112,5 +105,9 @@ public class SortedList<T> extends JList {
 				return p.matcher(object.toString()).matches();
 			};
 		});
+	}
+
+	public T getRowData() {
+		return listModel.getElementAt(getSelectedIndex());
 	}
 }
