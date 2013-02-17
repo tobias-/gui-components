@@ -19,7 +19,7 @@ public class SaneListModel<T> extends AbstractListModel {
 		this(new Comparator<T>() {
 			@Override
 			public int compare(final T o1, final T o2) {
-				return o1.toString().compareTo(o2.toString());
+				return o1.toString().compareToIgnoreCase(o2.toString());
 			}
 		});
 	}
