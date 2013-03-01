@@ -1,4 +1,4 @@
-package com.sourceforgery.guicomponents;
+package nongui;
 
 public interface Filter<T> {
 	public boolean isVisible(T object);

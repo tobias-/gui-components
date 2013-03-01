@@ -8,6 +8,8 @@ import java.util.TreeSet;
 import javax.swing.AbstractListModel;
 import javax.swing.SwingUtilities;
 
+import nongui.Filter;
+
 public class SaneListModel<T> extends AbstractListModel {
 	private static final long serialVersionUID = 1L;
 	private final TreeSet<T> list;

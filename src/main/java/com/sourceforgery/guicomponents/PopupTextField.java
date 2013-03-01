@@ -69,36 +69,41 @@ public class PopupTextField extends JDialog {
 				fireTextChanged(new ActionEvent(e.getDocument(), 0, textField.getText()));
 			}
 		});
-		component.addKeyListener(new KeyListener() {
-
-			@Override
-			public void keyTyped(final KeyEvent e) {
-				if ((e.getModifiers() & ~InputEvent.SHIFT_DOWN_MASK) == 0 && e.getKeyChar() != KeyEvent.CHAR_UNDEFINED
-						&& (e.getKeyChar() >= '0' || e.getKeyChar() == KeyEvent.VK_BACK_SPACE)) {
-					setVisible(true);
-					textField.dispatchEvent(e);
-				}
-			}
-
-			@Override
-			public void keyPressed(final KeyEvent e) {
-				if ((e.getModifiers() & ~InputEvent.SHIFT_DOWN_MASK) == 0 && e.getKeyChar() != KeyEvent.CHAR_UNDEFINED
-						&& (e.getKeyChar() >= '0' || e.getKeyChar() == KeyEvent.VK_BACK_SPACE)) {
-					setVisible(true);
-					textField.dispatchEvent(e);
-				}
-			}
-
-			@Override
-			public void keyReleased(final KeyEvent e) {
-				if ((e.getModifiers() & ~InputEvent.SHIFT_DOWN_MASK) == 0 && e.getKeyChar() != KeyEvent.CHAR_UNDEFINED
-						&& (e.getKeyChar() >= '0' || e.getKeyChar() == KeyEvent.VK_BACK_SPACE)) {
-					setVisible(true);
-					textField.dispatchEvent(e);
-				}
-			}
-		});
 	}
+
+	public void addDetectSearch(final Component component) {
+		component.addKeyListener(new DetectSearch());
+	}
+
+	public void addDetectSearch() {
+		addDetectSearch(component);
+	}
+
+	private class DetectSearch implements KeyListener {
+
+		@Override
+		public void keyTyped(final KeyEvent e) {
+			if ((e.getModifiers() & (InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK)) == 0
+					&& e.getKeyChar() != KeyEvent.CHAR_UNDEFINED
+					&& (e.getKeyChar() >= '0' || e.getKeyChar() == KeyEvent.VK_BACK_SPACE)) {
+				if (KeyEvent.KEY_TYPED == e.getID()) {
+					setVisible(true);
+				}
+				textField.dispatchEvent(e);
+			}
+		}
+
+		@Override
+		public void keyPressed(final KeyEvent e) {
+			keyTyped(e);
+		}
+
+		@Override
+		public void keyReleased(final KeyEvent e) {
+			keyTyped(e);
+		}
+	}
+
 
 	public JTextField getTextField() {
 		return textField;

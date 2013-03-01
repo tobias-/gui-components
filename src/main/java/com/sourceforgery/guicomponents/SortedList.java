@@ -13,6 +13,9 @@ import java.util.regex.Pattern;
 
 import javax.swing.JList;
 
+import nongui.Filter;
+import nongui.InterruptableBackgroundWorkerHandler;
+
 public class SortedList<T> extends JList {
 	private static final long serialVersionUID = 1L;
 	private final LinkedList<ListClickAdapter<T>> clickListeners = new LinkedList<ListClickAdapter<T>>();
@@ -56,6 +59,7 @@ public class SortedList<T> extends JList {
 				workerHandler.runInBackground(".*" + e.getActionCommand() + ".*");
 			}
 		});
+		popupTextField.addDetectSearch();
 	}
 
 	private void fireClickListeners(final ListClickMouseEvent<T> e) {
