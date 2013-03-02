@@ -21,7 +21,7 @@ public class SortedList<T> extends JList {
 	private final List<ListClickAdapter<T>> clickListeners = new LinkedList<ListClickAdapter<T>>();
 	private final SaneListModel<T> listModel;
 	private final PopupTextField popupTextField = new PopupTextField("", (Frame) getTopLevelAncestor(), this);
-	private final InterruptableBackgroundWorkerHandler<String, Void> workerHandler = new InterruptableBackgroundWorkerHandler<String, Void>() {
+	private transient final InterruptableBackgroundWorkerHandler<String, Void> workerHandler = new InterruptableBackgroundWorkerHandler<String, Void>() {
 		@Override
 		public Void runWithData(final String... args) throws InterruptedException {
 			setFilter(args[0]);

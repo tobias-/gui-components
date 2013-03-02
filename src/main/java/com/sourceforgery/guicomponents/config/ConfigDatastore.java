@@ -140,9 +140,9 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 		}
 		log.debug("Reading configuration from: " + file.toString());
 		Reader reader = new InputStreamReader(new FileInputStream(file), "UTF-8");
+		LineNumberReader lineNumberReader = new LineNumberReader(reader);
 		try {
 			stack.add(file);
-			LineNumberReader lineNumberReader = new LineNumberReader(reader);
 			String line;
 			while ((line = lineNumberReader.readLine()) != null) {
 				String trimmedLine = line.trim();
@@ -169,7 +169,7 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 			throw new IOException("Error parsing in " + file, e);
 		} finally {
 			stack.remove(file);
-			IOUtils.closeQuietly(reader);
+			IOUtils.closeQuietly(lineNumberReader);
 		}
 	}
 
@@ -271,10 +271,14 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 			+ "but comments will be deleted next time you quit the program";
 
 	public void saveConfig() {
+		OutputStreamWriter writer = null;
 		try {
-			config.store(new OutputStreamWriter(new FileOutputStream(configPath), "UTF-8"), comments);
+			writer = new OutputStreamWriter(new FileOutputStream(configPath), "UTF-8");
+			config.store(writer, comments);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
+		} finally {
+			IOUtils.closeQuietly(writer);
 		}
 	}
 
@@ -316,11 +320,11 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 		return cachedValues;
 	}
 
-	public Map<String, String> getPropOrigin() {
+	protected Map<String, String> getPropOrigin() {
 		return propOrigin;
 	}
 
-	public void setPropOrigin(final Map<String, String> propOrigin) {
+	protected void setPropOrigin(final Map<String, String> propOrigin) {
 		this.propOrigin = propOrigin;
 	}
 }

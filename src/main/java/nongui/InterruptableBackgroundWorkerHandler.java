@@ -4,9 +4,13 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.SwingUtilities;
 
+import org.apache.log4j.Logger;
+
 public abstract class InterruptableBackgroundWorkerHandler<Args, Result> {
 
 	private Thread currentlyRunning;
+
+	private final Logger log = Logger.getLogger(getClass());
 
 	private class InterrputableBackgroundWorker extends Thread {
 		private final Args[] data;
@@ -26,7 +30,7 @@ public abstract class InterruptableBackgroundWorkerHandler<Args, Result> {
 			} catch (InterruptedException e) {
 				// Normal. Ignore
 			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+				log.error("Failed to invoke gui job", e);
 			}
 		}
 	}

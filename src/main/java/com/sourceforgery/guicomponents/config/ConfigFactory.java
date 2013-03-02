@@ -8,6 +8,9 @@ public class ConfigFactory {
 	private static Throwable oldConfigStack;
 	private static Logger logger = Logger.getLogger(ConfigFactory.class);
 
+	private ConfigFactory() {
+	}
+
 	public static void init(final ConfigDatastore<?> datastore) {
 		if (instance != null) {
 			logger.fatal("Initialized more than once. Previous initialization", oldConfigStack);

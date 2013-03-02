@@ -83,8 +83,8 @@ public class PopupTextField extends JDialog {
 
 		@Override
 		public void keyTyped(final KeyEvent e) {
-			if ((e.getModifiers() & (InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK)) == 0
-					&& e.getKeyChar() != KeyEvent.CHAR_UNDEFINED
+			boolean noSpecialModifiers = (e.getModifiers() & (InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK)) == 0;
+			if (noSpecialModifiers && e.getKeyChar() != KeyEvent.CHAR_UNDEFINED
 					&& (e.getKeyChar() >= '0' || e.getKeyChar() == KeyEvent.VK_BACK_SPACE)) {
 				if (KeyEvent.KEY_TYPED == e.getID()) {
 					setVisible(true);
