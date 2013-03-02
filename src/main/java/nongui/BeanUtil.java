@@ -36,7 +36,7 @@ public class BeanUtil {
 			}
 			return result;
 		} catch (Exception e) {
-			throw new RuntimeException("Error running " + clazz.getName() + ".valueOf((" + o.getClass() + ") " + o
+			throw new IllegalArgumentException("Error running " + clazz.getName() + ".valueOf((" + o.getClass() + ") " + o
 					+ ")", e);
 		}
 	}

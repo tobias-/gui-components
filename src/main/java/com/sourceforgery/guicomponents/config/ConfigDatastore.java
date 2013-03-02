@@ -27,12 +27,12 @@ import org.apache.log4j.Logger;
 
 public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigParameters> {
 
-	protected Properties config;
-	protected final Map<AvailableConfigParameters, Object> cachedValues;
-	protected Map<String, String> propOrigin;
+	private Properties config;
+	private final Map<AvailableConfigParameters, Object> cachedValues;
+	private Map<String, String> propOrigin;
 
 	private final String configPath;
-	protected final Logger LOGGER = Logger.getLogger(getClass());
+	private final Logger LOGGER = Logger.getLogger(getClass());
 	private final List<ConfigParameters> availableEnums;
 	private final Method enumValueOf;
 
@@ -302,5 +302,25 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 				getCastConfig(param);
 			}
 		}
+	}
+
+	public Properties getConfig() {
+		return config;
+	}
+
+	public void setConfig(final Properties config) {
+		this.config = config;
+	}
+
+	public Map<AvailableConfigParameters, Object> getCachedValues() {
+		return cachedValues;
+	}
+
+	public Map<String, String> getPropOrigin() {
+		return propOrigin;
+	}
+
+	public void setPropOrigin(final Map<String, String> propOrigin) {
+		this.propOrigin = propOrigin;
 	}
 }
