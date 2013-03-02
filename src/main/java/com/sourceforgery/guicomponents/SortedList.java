@@ -18,7 +18,7 @@ import nongui.InterruptableBackgroundWorkerHandler;
 
 public class SortedList<T> extends JList {
 	private static final long serialVersionUID = 1L;
-	private final LinkedList<ListClickAdapter<T>> clickListeners = new LinkedList<ListClickAdapter<T>>();
+	private final List<ListClickAdapter<T>> clickListeners = new LinkedList<ListClickAdapter<T>>();
 	private final SaneListModel<T> listModel;
 	private final PopupTextField popupTextField = new PopupTextField("", (Frame) getTopLevelAncestor(), this);
 	private final InterruptableBackgroundWorkerHandler<String, Void> workerHandler = new InterruptableBackgroundWorkerHandler<String, Void>() {
