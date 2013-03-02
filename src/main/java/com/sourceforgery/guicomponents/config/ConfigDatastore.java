@@ -248,7 +248,7 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 			} catch (EnumConstantNotPresentException e) {
 				String error = "WARNING!! Unused property present from: " + propOrigin.get(propName);
 				log.fatal(error);
-				throw new ConfigParsingException(error);
+				throw new ConfigParsingException(error, e);
 			}
 		}
 	}
