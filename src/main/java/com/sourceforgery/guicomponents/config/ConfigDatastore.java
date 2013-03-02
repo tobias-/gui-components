@@ -76,10 +76,10 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 
 	public final synchronized void refresh() {
 		Properties props = new Properties();
-		Map<String, String> propOrigin = new HashMap<String, String>();
-		loadConfigs(props, propOrigin);
+		Map<String, String> newPropOrigin = new HashMap<String, String>();
+		loadConfigs(props, newPropOrigin);
 		config = props;
-		this.propOrigin = propOrigin;
+		propOrigin = newPropOrigin;
 		cachedValues.clear();
 		validateConfig();
 	}
@@ -248,7 +248,7 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 			} catch (EnumConstantNotPresentException e) {
 				String error = "WARNING!! Unused property present from: " + propOrigin.get(propName);
 				log.fatal(error);
-				System.exit(1);
+				throw new ConfigParsingException(error);
 			}
 		}
 	}
