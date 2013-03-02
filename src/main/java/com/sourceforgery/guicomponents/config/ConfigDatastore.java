@@ -32,7 +32,7 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 	private Map<String, String> propOrigin;
 
 	private final String configPath;
-	private final Logger LOGGER = Logger.getLogger(getClass());
+	private final Logger log = Logger.getLogger(getClass());
 	private final List<ConfigParameters> availableEnums;
 	private final Method enumValueOf;
 
@@ -43,7 +43,7 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 		} else {
 			this.configPath = System.getProperty("config.file");
 		}
-		LOGGER.info("Loading config " + this.configPath);
+		log.info("Loading config " + this.configPath);
 		cachedValues = Collections.synchronizedMap(new HashMap<AvailableConfigParameters, Object>());
 		propOrigin = new HashMap<String, String>();
 		try {
@@ -92,7 +92,7 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 		try {
 			loadFileProperties(props, propOrigin);
 		} catch (IOException e) {
-			LOGGER.error("Failed to load file properties" + e.getMessage());
+			log.error("Failed to load file properties" + e.getMessage());
 		}
 		loadEnvironmentProperties(props, propOrigin);
 		loadSystemProperties(props, propOrigin);
@@ -135,10 +135,10 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 	protected void loadConfig(final Properties config, final File file, final List<File> stack,
 			final Map<String, String> propOrigin) throws IOException {
 		if (stack.contains(file)) {
-			LOGGER.error("Config loop detected! " + stack + ". Skipped.");
+			log.error("Config loop detected! " + stack + ". Skipped.");
 			return;
 		}
-		LOGGER.debug("Reading configuration from: " + file.toString());
+		log.debug("Reading configuration from: " + file.toString());
 		Reader reader = new InputStreamReader(new FileInputStream(file), "UTF-8");
 		try {
 			stack.add(file);
@@ -152,8 +152,8 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 						try {
 							loadConfig(config, subConfig, stack, propOrigin);
 						} catch (IOException e) {
-							LOGGER.debug("Couldn't open/read subconfig " + subConfig + ". Skipped.");
-							LOGGER.debug(e.getMessage());
+							log.debug("Couldn't open/read subconfig " + subConfig + ". Skipped.");
+							log.debug(e.getMessage());
 						}
 					} else {
 						String[] split = trimmedLine.split("\\s*=\\s*", 2);
@@ -237,17 +237,17 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 					getCastConfig(parameter);
 				}
 			} catch (RuntimeException e) {
-				LOGGER.error("Could not parse " + parameter.name() + " illegal value " + printedValue, e);
+				log.error("Could not parse " + parameter.name() + " illegal value " + printedValue, e);
 			}
 			String message = parameter.name() + " = " + printedValue + " from " + propOrigin.get(parameter.name());
-			LOGGER.debug(message);
+			log.debug(message);
 		}
 		for (String propName : config.stringPropertyNames()) {
 			try {
 				valueOf(propName);
 			} catch (EnumConstantNotPresentException e) {
 				String error = "WARNING!! Unused property present from: " + propOrigin.get(propName);
-				LOGGER.fatal(error);
+				log.fatal(error);
 				System.exit(1);
 			}
 		}
