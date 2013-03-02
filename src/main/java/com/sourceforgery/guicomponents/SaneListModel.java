@@ -3,6 +3,8 @@ package com.sourceforgery.guicomponents;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 import javax.swing.AbstractListModel;
@@ -12,8 +14,8 @@ import nongui.Filter;
 
 public class SaneListModel<T> extends AbstractListModel {
 	private static final long serialVersionUID = 1L;
-	private final TreeSet<T> list;
-	private final ArrayList<T> shownList = new ArrayList<T>();
+	private final Set<T> list;
+	private final List<T> shownList = new ArrayList<T>();
 	@SuppressWarnings("unchecked")
 	private Filter<T> filter = Filter.ALL_VISIBLE;
 

@@ -74,7 +74,7 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 		}
 	}
 
-	public synchronized void refresh() {
+	public final synchronized void refresh() {
 		Properties props = new Properties();
 		Map<String, String> propOrigin = new HashMap<String, String>();
 		loadConfigs(props, propOrigin);
