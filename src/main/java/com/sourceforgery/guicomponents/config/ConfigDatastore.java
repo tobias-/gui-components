@@ -27,6 +27,9 @@ import org.apache.log4j.Logger;
 
 public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigParameters> {
 
+	private static final String COMMENTS = "You're welcome to modify this file"
+			+ "but comments will be deleted next time you quit the program";
+
 	private Properties config;
 	private final Map<AvailableConfigParameters, Object> cachedValues;
 	private Map<String, String> propOrigin;
@@ -267,14 +270,11 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 		return null;
 	}
 
-	private static final String comments = "You're welcome to modify this file"
-			+ "but comments will be deleted next time you quit the program";
-
 	public void saveConfig() {
 		OutputStreamWriter writer = null;
 		try {
 			writer = new OutputStreamWriter(new FileOutputStream(configPath), "UTF-8");
-			config.store(writer, comments);
+			config.store(writer, COMMENTS);
 		} catch (IOException e) {
 			throw new IORuntimeException(e);
 		} finally {
@@ -284,10 +284,8 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 
 	public void clearConfig() throws IOException {
 		File file = new File(configPath);
-		if (file.exists()) {
-			if (!file.delete()) {
-				throw new IOException("Failed to delete " + file);
-			}
+		if (file.exists() && !file.delete()) {
+			throw new IOException("Failed to delete " + file);
 		}
 	}
 
