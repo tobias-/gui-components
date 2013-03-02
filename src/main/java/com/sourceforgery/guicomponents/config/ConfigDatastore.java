@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import nongui.BeanUtil;
+import nongui.IORuntimeException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -49,13 +50,13 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 			this.availableEnums = Arrays.asList((ConfigParameters[]) availableEnums.getMethod("values").invoke(null));
 			enumValueOf = availableEnums.getMethod("valueOf", String.class);
 		} catch (SecurityException e) {
-			throw new RuntimeException(e);
+			throw new IllegalArgumentException(e);
 		} catch (NoSuchMethodException e) {
-			throw new RuntimeException(e);
+			throw new IllegalArgumentException(e);
 		} catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
+			throw new IllegalArgumentException(e);
 		} catch (InvocationTargetException e) {
-			throw new RuntimeException(e);
+			throw new IllegalArgumentException(e);
 		}
 		refresh();
 	}
@@ -273,7 +274,7 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 		try {
 			config.store(new OutputStreamWriter(new FileOutputStream(configPath), "UTF-8"), comments);
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new IORuntimeException(e);
 		}
 	}
 
