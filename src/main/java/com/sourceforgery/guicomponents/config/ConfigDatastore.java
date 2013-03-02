@@ -282,10 +282,12 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 		}
 	}
 
-	public void clearConfig() {
+	public void clearConfig() throws IOException {
 		File file = new File(configPath);
 		if (file.exists()) {
-			file.delete();
+			if (!file.delete()) {
+				throw new IOException("Failed to delete " + file);
+			}
 		}
 	}
 
