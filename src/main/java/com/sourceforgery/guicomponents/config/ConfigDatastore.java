@@ -145,23 +145,23 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 			String line;
 			while ((line = lineNumberReader.readLine()) != null) {
 				String trimmedLine = line.trim();
-				if (trimmedLine.startsWith("#") || trimmedLine.isEmpty()) {
-					// comment
-				} else if (trimmedLine.startsWith("load ")) {
-					File subConfig = new File(trimmedLine.split(" +", 2)[1]).getAbsoluteFile();
-					try {
-						loadConfig(config, subConfig, stack, propOrigin);
-					} catch (IOException e) {
-						LOGGER.debug("Couldn't open/read subconfig " + subConfig + ". Skipped.");
-						LOGGER.debug(e.getMessage());
+				if (!trimmedLine.startsWith("#") && !trimmedLine.isEmpty()) {
+					if (trimmedLine.startsWith("load ")) {
+						File subConfig = new File(trimmedLine.split(" +", 2)[1]).getAbsoluteFile();
+						try {
+							loadConfig(config, subConfig, stack, propOrigin);
+						} catch (IOException e) {
+							LOGGER.debug("Couldn't open/read subconfig " + subConfig + ". Skipped.");
+							LOGGER.debug(e.getMessage());
+						}
+					} else {
+						String[] split = trimmedLine.split("\\s*=\\s*", 2);
+						if (split.length < 2) {
+							throw new IOException("Error on line " + lineNumberReader.getLineNumber());
+						}
+						config.put(split[0], split[1]);
+						propOrigin.put(split[0], file.toString() + ":" + lineNumberReader.getLineNumber());
 					}
-				} else {
-					String[] split = trimmedLine.split("\\s*=\\s*", 2);
-					if (split.length < 2) {
-						throw new IOException("Error on line " + lineNumberReader.getLineNumber());
-					}
-					config.put(split[0], split[1]);
-					propOrigin.put(split[0], file.toString() + ":" + lineNumberReader.getLineNumber());
 				}
 			}
 		} catch (IOException e) {
