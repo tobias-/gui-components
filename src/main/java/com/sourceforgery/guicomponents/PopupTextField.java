@@ -24,12 +24,18 @@ public class PopupTextField extends JDialog {
 	private final JTextField textField;
 	private final Component component;
 	private final List<ActionListener> actionListeners = new LinkedList<ActionListener>();
+	private static final int DEFAULT_WIDTH = 200;
+	private static final int DEFAULT_HEIGHT= 20;
 
 	public PopupTextField(final String initialText, final Frame owningFrame, final Component component) {
+		this(initialText, owningFrame, component, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	}
+
+	public PopupTextField(final String initialText, final Frame owningFrame, final Component component, final int width, final int height) {
 		super(owningFrame);
 		setUndecorated(true);
 		this.component = component;
-		setSize(200, 20);
+		setSize(width, height);
 		textField = new JTextField(initialText);
 		add(getTextField());
 		addFocusListener(new FocusAdapter() {
