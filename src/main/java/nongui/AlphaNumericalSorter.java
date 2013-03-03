@@ -43,12 +43,7 @@ public class AlphaNumericalSorter<T> implements Comparator<T>, Serializable {
 			if (isDigit(c1) && isDigit(c2)) {
 				skipZeros(pos1, o1);
 				skipZeros(pos2, o2);
-				int numDiff = 0;
-				while(pos1.intValue() < len1 && pos2.intValue() < len2 && numDiff == 0 && isDigit(o1.charAt(pos1.intValue())) && isDigit(o2.charAt(pos2.intValue()))) {
-					numDiff = o1.charAt(pos1.intValue()) - o2.charAt(pos2.intValue());
-					pos1.increment();
-					pos2.increment();
-				}
+				int numDiff = findDifference(o1, o2, pos1, pos2);
 				int numLen1 = countDigits(o1, pos1);
 				int numLen2 = countDigits(o2, pos2);
 				if (numLen1 != numLen2) {
@@ -70,5 +65,17 @@ public class AlphaNumericalSorter<T> implements Comparator<T>, Serializable {
 			}
 		}
 		return diff;
+	}
+
+	private int findDifference(final String o1, final String o2, final MutableInt pos1, final MutableInt pos2) {
+		int numDiff = 0;
+		int len1 = o1.length();
+		int len2 = o2.length();
+		while(pos1.intValue() < len1 && pos2.intValue() < len2 && numDiff == 0 && isDigit(o1.charAt(pos1.intValue())) && isDigit(o2.charAt(pos2.intValue()))) {
+			numDiff = o1.charAt(pos1.intValue()) - o2.charAt(pos2.intValue());
+			pos1.increment();
+			pos2.increment();
+		}
+		return numDiff;
 	}
 }
