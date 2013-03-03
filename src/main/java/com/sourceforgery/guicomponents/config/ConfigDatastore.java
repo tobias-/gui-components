@@ -32,7 +32,7 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 
 	private Properties config;
 	private final Map<AvailableConfigParameters, Object> cachedValues;
-	private Map<String, String> propOrigin;
+	protected Map<String, String> propOrigin;
 
 	private final String configPath;
 	private final Logger log = Logger.getLogger(getClass());
@@ -228,7 +228,7 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 		}
 	}
 
-	protected void validateConfig() {
+	protected synchronized void validateConfig() {
 		for (ConfigParameters parameter : availableEnums) {
 			String value = config.getProperty(parameter.name());
 			String printedValue = value;
@@ -318,13 +318,5 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 
 	public Map<AvailableConfigParameters, Object> getCachedValues() {
 		return cachedValues;
-	}
-
-	protected Map<String, String> getPropOrigin() {
-		return propOrigin;
-	}
-
-	protected void setPropOrigin(final Map<String, String> propOrigin) {
-		this.propOrigin = propOrigin;
 	}
 }
