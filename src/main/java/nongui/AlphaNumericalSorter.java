@@ -3,9 +3,21 @@ package nongui;
 import static java.lang.Character.isDigit;
 import static java.lang.Character.toUpperCase;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
-public class AlphaNumericalSorter<T> implements Comparator<T> {
+public class AlphaNumericalSorter<T> implements Comparator<T>, Serializable {
+	private static final long serialVersionUID = 1L;
+
+	private int skipZeros(final int origPos, final String o) {
+		int pos = origPos;
+		int len = o.length();
+		while(pos < len && o.charAt(pos) == '0' ) {
+			pos++;
+		}
+		return pos;
+	}
+
 
 	@Override
 	public int compare(final T x1, final T x2) {
@@ -20,12 +32,8 @@ public class AlphaNumericalSorter<T> implements Comparator<T> {
 			char c1 = o1.charAt(pos1);
 			char c2 = o2.charAt(pos2);
 			if (isDigit(c1) && isDigit(c2)) {
-				while(pos1 < len1 && o1.charAt(pos1) == '0' ) {
-					pos1++;
-				}
-				while(pos2 < len2 && o2.charAt(pos2) == '0') {
-					pos2++;
-				}
+				pos1 = skipZeros(pos1, o1);
+				pos2 = skipZeros(pos2, o2);
 				int numLen1 = 0;
 				int numLen2 = 0;
 				int numDiff = 0;
