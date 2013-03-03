@@ -28,7 +28,10 @@ public class BeanUtil {
 					try {
 						Method method = clazz.getMethod("valueOf", o.getClass());
 						result = clazz.cast(method.invoke(null, o));
-					} catch (Exception e) {
+					} catch (RuntimeException e) {
+						Constructor<T> c = clazz.getConstructor(o.getClass());
+						result = c.newInstance(o);
+					} catch (NoSuchMethodException e) {
 						Constructor<T> c = clazz.getConstructor(o.getClass());
 						result = c.newInstance(o);
 					}
