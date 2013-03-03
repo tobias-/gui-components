@@ -265,9 +265,9 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 				config.getProperty(configParameter.toString());
 				return BeanUtil.valueOf(configParameter.getClazz(), value);
 			} catch (RuntimeException e) {
+				return null;
 			}
 		}
-		return null;
 	}
 
 	public void saveConfig() {
