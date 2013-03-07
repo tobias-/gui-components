@@ -1,4 +1,4 @@
-package nongui;
+package com.sourceforgery.nongui;
 
 public class IORuntimeException extends RuntimeException {
 	private static final long serialVersionUID = 1L;

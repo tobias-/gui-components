@@ -13,8 +13,9 @@ import java.util.regex.Pattern;
 
 import javax.swing.JList;
 
-import nongui.Filter;
-import nongui.InterruptableBackgroundWorkerHandler;
+import com.sourceforgery.nongui.Filter;
+import com.sourceforgery.nongui.InterruptableBackgroundWorkerHandler;
+
 
 public class SortedList<T> extends JList {
 	private static final long serialVersionUID = 1L;

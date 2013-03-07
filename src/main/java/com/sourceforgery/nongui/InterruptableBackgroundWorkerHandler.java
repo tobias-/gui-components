@@ -1,4 +1,4 @@
-package nongui;
+package com.sourceforgery.nongui;
 
 import java.lang.reflect.InvocationTargetException;
 

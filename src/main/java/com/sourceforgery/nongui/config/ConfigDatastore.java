@@ -1,4 +1,4 @@
-package com.sourceforgery.guicomponents.config;
+package com.sourceforgery.nongui.config;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,12 +18,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import nongui.BeanUtil;
-import nongui.IORuntimeException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+
+import com.sourceforgery.nongui.BeanUtil;
+import com.sourceforgery.nongui.IORuntimeException;
 
 public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigParameters> {
 
@@ -38,6 +39,8 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 	private final Logger log = Logger.getLogger(getClass());
 	private final List<ConfigParameters> availableEnums;
 	private final Method enumValueOf;
+
+	private List<String> parseErrors = new LinkedList<String>();
 
 	@SuppressWarnings("unchecked")
 	public ConfigDatastore(final Class<ConfigParameters> availableEnums, final String configPath) {
@@ -135,6 +138,7 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 		}
 	}
 
+	@SuppressWarnings("resource")
 	protected void loadConfig(final Properties config, final File file, final List<File> stack,
 			final Map<String, String> propOrigin) throws IOException {
 		if (stack.contains(file)) {
@@ -251,7 +255,7 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 			} catch (EnumConstantNotPresentException e) {
 				String error = "WARNING!! Unused property present from: " + propOrigin.get(propName);
 				log.fatal(error);
-				throw new ConfigParsingException(error, e);
+				parseErrors.add(error);
 			}
 		}
 	}
@@ -318,5 +322,9 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 
 	public Map<AvailableConfigParameters, Object> getCachedValues() {
 		return cachedValues;
+	}
+
+	public boolean isParsedWithErrors() {
+		return parseErrors.size()>0;
 	}
 }

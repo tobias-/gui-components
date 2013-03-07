@@ -1,4 +1,4 @@
-package com.sourceforgery.guicomponents.config;
+package com.sourceforgery.nongui.config;
 
 import org.apache.log4j.Logger;
 

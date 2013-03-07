@@ -1,4 +1,4 @@
-package nongui;
+package com.sourceforgery.nongui;
 
 public interface Filter<T> {
 	boolean isVisible(T object);

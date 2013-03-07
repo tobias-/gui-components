@@ -10,7 +10,8 @@ import java.util.TreeSet;
 import javax.swing.AbstractListModel;
 import javax.swing.SwingUtilities;
 
-import nongui.Filter;
+import com.sourceforgery.nongui.Filter;
+
 
 public class SaneListModel<T> extends AbstractListModel {
 	private static final long serialVersionUID = 1L;

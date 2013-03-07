@@ -3,9 +3,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.TreeSet;
 
-import nongui.AlphaNumericalSorter;
 
 import org.junit.Test;
+
+import com.sourceforgery.nongui.AlphaNumericalSorter;
 
 public class AlphaNumericalSorterTest {
 	private final AlphaNumericalSorter<String> sort = new AlphaNumericalSorter<String>();

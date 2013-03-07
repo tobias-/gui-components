@@ -1,4 +1,4 @@
-package com.sourceforgery.guicomponents.config;
+package com.sourceforgery.nongui.config;
 
 public class ConfigParsingException extends RuntimeException {
 	private static final long serialVersionUID = 1L;

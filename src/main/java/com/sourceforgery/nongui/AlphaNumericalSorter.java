@@ -1,4 +1,4 @@
-package nongui;
+package com.sourceforgery.nongui;
 
 import static java.lang.Character.isDigit;
 import static java.lang.Character.toUpperCase;
