@@ -1,7 +1,7 @@
 package com.sourceforgery.nongui;
 
 import static java.lang.Character.isDigit;
-import static java.lang.Character.toUpperCase;
+import static java.lang.Character.toLowerCase;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -10,6 +10,15 @@ import org.apache.commons.lang3.mutable.MutableInt;
 
 public class AlphaNumericalSorter<T> implements Comparator<T>, Serializable {
 	private static final long serialVersionUID = 1L;
+	private final boolean caseInsensitive;
+
+	public AlphaNumericalSorter(final boolean caseInsensitive) {
+		this.caseInsensitive = caseInsensitive;
+	}
+
+	public AlphaNumericalSorter() {
+		this(true);
+	}
 
 	private void skipZeros(final MutableInt pos, final String o) {
 		int len = o.length();
@@ -52,7 +61,11 @@ public class AlphaNumericalSorter<T> implements Comparator<T>, Serializable {
 					diff = numDiff;
 				}
 			} else {
-				diff = toUpperCase(c1) - toUpperCase(c2);
+				if (caseInsensitive) {
+					diff = toLowerCase(c1) - toLowerCase(c2);
+				} else {
+					diff = c1 - c2;
+				}
 				pos1.increment();
 				pos2.increment();
 			}
@@ -68,14 +81,14 @@ public class AlphaNumericalSorter<T> implements Comparator<T>, Serializable {
 	}
 
 	private int findDifference(final String o1, final String o2, final MutableInt pos1, final MutableInt pos2) {
-		int numDiff = 0;
+		int digitDiff = 0;
 		int len1 = o1.length();
 		int len2 = o2.length();
-		while(pos1.intValue() < len1 && pos2.intValue() < len2 && numDiff == 0 && isDigit(o1.charAt(pos1.intValue())) && isDigit(o2.charAt(pos2.intValue()))) {
-			numDiff = o1.charAt(pos1.intValue()) - o2.charAt(pos2.intValue());
+		while(pos1.intValue() < len1 && pos2.intValue() < len2 && digitDiff == 0 && isDigit(o1.charAt(pos1.intValue())) && isDigit(o2.charAt(pos2.intValue()))) {
+			digitDiff = o1.charAt(pos1.intValue()) - o2.charAt(pos2.intValue());
 			pos1.increment();
 			pos2.increment();
 		}
-		return numDiff;
+		return digitDiff;
 	}
 }
