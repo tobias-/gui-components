@@ -40,7 +40,7 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 	private final List<ConfigParameters> availableEnums;
 	private final Method enumValueOf;
 
-	private List<String> parseErrors = new LinkedList<String>();
+	private final List<String> parseErrors = new LinkedList<String>();
 
 	@SuppressWarnings("unchecked")
 	public ConfigDatastore(final Class<ConfigParameters> availableEnums, final String configPath) {
@@ -138,7 +138,6 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 		}
 	}
 
-	@SuppressWarnings("resource")
 	protected void loadConfig(final Properties config, final File file, final List<File> stack,
 			final Map<String, String> propOrigin) throws IOException {
 		if (stack.contains(file)) {
