@@ -2,6 +2,7 @@ package com.sourceforgery.nongui;
 
 import java.awt.Dimension;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -28,6 +29,9 @@ public class BeanUtil {
 					try {
 						Method method = clazz.getMethod("valueOf", o.getClass());
 						result = clazz.cast(method.invoke(null, o));
+					} catch (InvocationTargetException e)  {
+						Constructor<T> c = clazz.getConstructor(o.getClass());
+						result = c.newInstance(o);
 					} catch (RuntimeException e) {
 						Constructor<T> c = clazz.getConstructor(o.getClass());
 						result = c.newInstance(o);
