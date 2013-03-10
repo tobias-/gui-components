@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -132,9 +131,11 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 	}
 
 	protected void loadFileProperties(final Properties props, final Map<String, String> propOrigin) throws IOException {
-		File file = new File(configPath);
-		if (file.canRead() && file.exists() && file.isFile()) {
-			loadConfig(props, file.getAbsoluteFile(), new LinkedList<File>(), propOrigin);
+		if (configPath != null) {
+			File file = new File(configPath);
+			if (file.canRead() && file.exists() && file.isFile()) {
+				loadConfig(props, file.getAbsoluteFile(), new LinkedList<File>(), propOrigin);
+			}
 		}
 	}
 
@@ -193,7 +194,7 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 	 *  </code><p>
 	 *  Hint: <b>import static</b> is your friend when working with config variables<br>
 	 *  @param configParameter The config parameter to read
-	 * 
+	 *
 	 */
 	public String getConfig(final AvailableConfigParameters configParameter) {
 		return config.getProperty(configParameter.toString());
@@ -213,7 +214,7 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 	 *  </code><p>
 	 *  Hint: <b>import static</b> is your friend when working with config variables<br>
 	 *  @param configParameter The config parameter to read
-	 * 
+	 *
 	 */
 	@SuppressWarnings("unchecked")
 	public <S> S getCastConfig(final AvailableConfigParameters configParameter) {
@@ -274,21 +275,25 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 	}
 
 	public void saveConfig() {
-		OutputStreamWriter writer = null;
-		try {
-			writer = new OutputStreamWriter(new FileOutputStream(configPath), "UTF-8");
-			config.store(writer, COMMENTS);
-		} catch (IOException e) {
-			throw new IORuntimeException(e);
-		} finally {
-			IOUtils.closeQuietly(writer);
+		if (configPath != null) {
+			OutputStreamWriter writer = null;
+			try {
+				writer = new OutputStreamWriter(new FileOutputStream(configPath), "UTF-8");
+				config.store(writer, COMMENTS);
+			} catch (IOException e) {
+				throw new IORuntimeException(e);
+			} finally {
+				IOUtils.closeQuietly(writer);
+			}
 		}
 	}
 
 	public void clearConfig() throws IOException {
-		File file = new File(configPath);
-		if (file.exists() && !file.delete()) {
-			throw new IOException("Failed to delete " + file);
+		if (configPath != null) {
+			File file = new File(configPath);
+			if (file.exists() && !file.delete()) {
+				throw new IOException("Failed to delete " + file);
+			}
 		}
 	}
 
@@ -324,6 +329,6 @@ public class ConfigDatastore<ConfigParameters extends Enum<?> & AvailableConfigP
 	}
 
 	public boolean isParsedWithErrors() {
-		return parseErrors.size()>0;
+		return parseErrors.size() > 0;
 	}
 }
