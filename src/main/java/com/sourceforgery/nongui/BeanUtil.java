@@ -47,4 +47,16 @@ public class BeanUtil {
 					+ ")", e);
 		}
 	}
+
+	public static String toString(final Object value, final Class<?> clazz) {
+		if (value == null) {
+			return null;
+		} else {
+			if (Dimension.class == clazz) {
+				return "" + ((Dimension)value).width + 'x' + ((Dimension)value).height;
+			} else {
+				return value.toString();
+			}
+		}
+	}
 }
