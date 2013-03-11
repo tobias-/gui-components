@@ -49,7 +49,7 @@ public class BeanUtil {
 	}
 
 	public static String toString(final Object value, final Class<?> clazz) {
-		if (value == null) {
+		if (value == null || value instanceof String) {
 			return null;
 		} else {
 			if (Dimension.class == clazz) {
