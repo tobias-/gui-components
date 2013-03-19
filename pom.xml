@@ -8,11 +8,48 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jdkVersion>1.6</jdkVersion>
+		<s3Bucket>sourceforgery</s3Bucket>
 	</properties>
 	<description>Reusable components for gui</description>
 	<scm>
 		<developerConnection>scm:git:ssh://www.olsson.be:29418/guicomponents.git</developerConnection>
 	</scm>
+	<repositories>	
+		<repository>	
+			<id>maven-s3-release-repo</id>	
+			<name>S3 Release Repository</name>	
+			<url>s3://${s3Bucket}/release</url>	
+			<releases>	
+				<enabled>true</enabled>	
+			</releases>	
+			<snapshots>	
+				<enabled>false</enabled>	
+			</snapshots>	
+		</repository>	
+		<repository>	
+			<id>maven-s3-snapshot-repo</id>	
+			<name>S3 Snapshot Repository</name>	
+			<url>s3://${s3Bucket}/snapshot</url>	
+			<releases>	
+				<enabled>false</enabled>	
+			</releases>	
+			<snapshots>	
+				<enabled>true</enabled>	
+			</snapshots>	
+		</repository>	
+	</repositories>	
+	<distributionManagement>
+		<repository>	
+		<id>maven-s3-release-repo</id>	
+			<name>S3 Release Repository</name>	
+			<url>s3://${s3Bucket}/release</url>	
+		</repository>	
+		<snapshotRepository>	
+			<id>maven-s3-snapshot-repo</id>	
+			<name>S3 Snapshot Repository</name>	
+			<url>s3://${s3Bucket}/snapshot</url>	
+		</snapshotRepository>	
+	</distributionManagement>
 	<dependencies>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -48,4 +85,13 @@
 			<version>3.3.0-v3346</version>
 		</dependency>
 	</dependencies>
+	<build>	
+		<extensions>	
+			<extension>	
+				<groupId>org.springframework.build.aws</groupId>	
+				<artifactId>org.springframework.build.aws.maven</artifactId>	
+				<version>3.0.0.RELEASE</version>	
+			</extension>	
+		</extensions>	
+	</build>	
 </project>
