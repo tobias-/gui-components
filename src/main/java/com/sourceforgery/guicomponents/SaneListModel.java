@@ -2,23 +2,22 @@ package com.sourceforgery.guicomponents;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import javax.swing.AbstractListModel;
-import javax.swing.SwingUtilities;
 
 import com.sourceforgery.nongui.Filter;
 
-
 public class SaneListModel<T> extends AbstractListModel {
 	private static final long serialVersionUID = 1L;
-	private final Set<T> list;
-	private final List<T> shownList = new ArrayList<T>();
+	protected final Set<T> list;
+	protected final List<T> shownList = new ArrayList<T>();
 	@SuppressWarnings("unchecked")
-	private Filter<T> filter = Filter.ALL_VISIBLE;
+	protected Filter<T> filter = Filter.ALL_VISIBLE;
 
 	public SaneListModel() {
 		this(new Comparator<T>() {
@@ -33,43 +32,41 @@ public class SaneListModel<T> extends AbstractListModel {
 		list = new TreeSet<T>(comparator);
 	}
 
-	public synchronized void addAll(final Collection<? extends T> all) throws InterruptedException {
+	public void addAll(final Collection<? extends T> all) throws InterruptedException {
 		list.addAll(all);
 		updateShown();
 	}
 
-	private synchronized void updateShown() throws InterruptedException {
+	public boolean add(final T object) {
+		boolean b = list.add(object);
+		updateShown();
+		return b;
+	}
+
+	private void updateShown() {
 		int oldSize = getSize();
 		shownList.clear();
 		for (T item : list) {
 			if (getFilter().isVisible(item)) {
 				shownList.add(item);
 			}
-			if (Thread.currentThread().isInterrupted()) {
-				throw new InterruptedException("Thread interrupted");
-			}
 		}
 		if (oldSize != getSize()) {
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					fireContentsChanged(this, 0, getSize());
-				}
-			});
+			fireContentsChanged(this, 0, getSize());
 		}
 	}
 
 	@Override
-	public synchronized int getSize() {
+	public int getSize() {
 		return shownList.size();
 	}
 
 	@Override
-	public synchronized T getElementAt(final int index) {
+	public T getElementAt(final int index) {
 		return shownList.get(index);
 	}
 
-	public synchronized void clear() {
+	public void clear() {
 		int size = getSize();
 		list.clear();
 		shownList.clear();
@@ -83,5 +80,18 @@ public class SaneListModel<T> extends AbstractListModel {
 	public void setFilter(final Filter<T> filter) throws InterruptedException {
 		this.filter = filter;
 		updateShown();
+	}
+
+	public boolean remove(final T object) {
+		int idx = shownList.indexOf(object);
+		if (idx >= 0) {
+			shownList.remove(idx);
+			fireIntervalRemoved(this, idx, idx);
+		}
+		return list.remove(object);
+	}
+
+	public Set<T> getSet() {
+		return Collections.unmodifiableSet(list);
 	}
 }
