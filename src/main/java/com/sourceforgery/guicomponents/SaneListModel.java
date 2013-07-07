@@ -18,6 +18,8 @@ public class SaneListModel<T> extends AbstractListModel {
 	protected final List<T> shownList = new ArrayList<T>();
 	@SuppressWarnings("unchecked")
 	protected Filter<T> filter = Filter.ALL_VISIBLE;
+	protected boolean updatedEnabled = true;
+	protected boolean hasDelayedUpdates;
 
 	public SaneListModel() {
 		this(new Comparator<T>() {
@@ -44,6 +46,11 @@ public class SaneListModel<T> extends AbstractListModel {
 	}
 
 	private void updateShown() {
+		if (!updatedEnabled) {
+			hasDelayedUpdates = true;
+			return;
+		}
+		hasDelayedUpdates = false;
 		int oldSize = getSize();
 		shownList.clear();
 		for (T item : list) {
@@ -93,5 +100,16 @@ public class SaneListModel<T> extends AbstractListModel {
 
 	public Set<T> getSet() {
 		return Collections.unmodifiableSet(list);
+	}
+
+	public boolean isUpdatedEnabled() {
+		return updatedEnabled;
+	}
+
+	public void setUpdatedEnabled(final boolean updatedEnabled) {
+		this.updatedEnabled = updatedEnabled;
+		if (updatedEnabled && hasDelayedUpdates) {
+			updateShown();
+		}
 	}
 }
