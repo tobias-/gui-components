@@ -15,36 +15,33 @@ import javax.swing.JList;
 
 import com.sourceforgery.nongui.Filter;
 import com.sourceforgery.nongui.InterruptableBackgroundWorkerHandler;
-
+import com.sourceforgery.nongui.Matchable;
 
 public class SortedList<T> extends JList {
 	private static final long serialVersionUID = 1L;
-	private final List<ListClickAdapter<T>> clickListeners = new LinkedList<ListClickAdapter<T>>();
-	private final SaneListModel<T> listModel;
-	private final PopupTextField popupTextField = new PopupTextField("", (Frame) getTopLevelAncestor(), this);
-	private final transient InterruptableBackgroundWorkerHandler<String, Void> workerHandler = new InterruptableBackgroundWorkerHandler<String, Void>() {
-		@Override
-		public Void runWithData(final String... args) throws InterruptedException {
-			setFilter(args[0]);
-			return null;
-		}
-
-		@Override
-		public void runAfterInGui(final Void data) {
-		}
-	};
+	protected final List<ListClickAdapter<T>> clickListeners = new LinkedList<ListClickAdapter<T>>();
+	protected final PopupTextField popupTextField = new PopupTextField("", (Frame) getTopLevelAncestor(), this);
 
 	public SortedList(final Comparator<T> listSorter) {
-		listModel = new SaneListModel<T>(listSorter);
-		setModel(listModel);
+		this(new SaneListModel<T>(listSorter));
+	}
+
+	public SortedList(final SaneListModel<T> listModel) {
+		super(listModel);
+		if (listModel.getFilter() == null || listModel.getFilter() == Filter.ALL_VISIBLE) {
+			try {
+				setFilter(new RegexFilter<T>());
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
+		}
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(final MouseEvent e) {
 				JList list = (JList) e.getComponent();
 				int index = list.locationToIndex(e.getPoint());
 				if (index != -1) {
-					ListClickMouseEvent<T> listClickMouseEvent = new ListClickMouseEvent<T>(e,
-							getRowData());
+					ListClickMouseEvent<T> listClickMouseEvent = new ListClickMouseEvent<T>(e, getRowData());
 					if (e.getClickCount() == 1) {
 						fireClickListeners(listClickMouseEvent);
 					}
@@ -57,7 +54,7 @@ public class SortedList<T> extends JList {
 		popupTextField.getActionListeners().add(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				workerHandler.runInBackground(".*" + e.getActionCommand() + ".*");
+				setFilter(".*" + e.getActionCommand() + ".*");
 			}
 		});
 		popupTextField.addDetectSearch();
@@ -88,31 +85,48 @@ public class SortedList<T> extends JList {
 		return clickListeners;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public SaneListModel<T> getModel() {
-		return listModel;
+		return (SaneListModel<T>) super.getModel();
 	}
 
 	public void addAll(final Collection<T> items) throws InterruptedException {
-		listModel.addAll(items);
+		getModel().addAll(items);
 	}
 
 	public void setFilter(final Filter<T> filter) throws InterruptedException {
-		listModel.setFilter(filter);
+		getModel().setFilter(filter);
 	}
 
-	public void setFilter(final String regex) throws InterruptedException {
-		listModel.setFilter(new Filter<T>() {
-			private final Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-
-			@Override
-			public boolean isVisible(final T object) {
-				return p.matcher(object.toString()).matches();
-			};
-		});
+	public void setFilter(final String regex) {
+		RegexFilter<T> regexFilter = (RegexFilter<T>) getModel().getFilter();
+		regexFilter.setFilter(regex);
+		getModel().updateShown();
 	}
 
 	public T getRowData() {
-		return listModel.getElementAt(getSelectedIndex());
+		return getModel().getElementAt(getSelectedIndex());
 	}
+
+	public static class RegexFilter<T> implements Filter<T> {
+		private Pattern p;
+
+		public RegexFilter() {
+			setFilter(".*");
+		}
+
+		public void setFilter(final String regex) {
+			p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+		}
+
+		@Override
+		public boolean isVisible(final T object) {
+			if (object instanceof Matchable) {
+				return p.matcher(((Matchable) object).toMatchable()).matches();
+			}
+			return p.matcher(object.toString()).matches();
+		};
+	}
+
 }

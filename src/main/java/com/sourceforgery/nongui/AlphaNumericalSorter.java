@@ -18,10 +18,14 @@ public class AlphaNumericalSorter<T> implements Comparator<T>, Serializable {
 		this(true);
 	}
 
+	public String toString(final T x) {
+		return x.toString();
+	}
+
 	@Override
 	public int compare(final T x1, final T x2) {
-		String o1 = x1.toString();
-		String o2 = x2.toString();
+		String o1 = toString(x1);
+		String o2 = toString(x2);
 		int pos1 = 0;
 		int pos2 = 0;
 		int len1 = o1.length();

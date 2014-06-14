@@ -25,13 +25,14 @@ public class PopupTextField extends JDialog {
 	private final Component component;
 	private final List<ActionListener> actionListeners = new LinkedList<ActionListener>();
 	private static final int DEFAULT_WIDTH = 200;
-	private static final int DEFAULT_HEIGHT= 20;
+	private static final int DEFAULT_HEIGHT = 20;
 
 	public PopupTextField(final String initialText, final Frame owningFrame, final Component component) {
 		this(initialText, owningFrame, component, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	}
 
-	public PopupTextField(final String initialText, final Frame owningFrame, final Component component, final int width, final int height) {
+	public PopupTextField(final String initialText, final Frame owningFrame, final Component component,
+									final int width, final int height, final int... ignoredKeys) {
 		super(owningFrame);
 		setUndecorated(true);
 		this.component = component;
@@ -91,7 +92,7 @@ public class PopupTextField extends JDialog {
 		public void keyTyped(final KeyEvent e) {
 			boolean noSpecialModifiers = (e.getModifiers() & (InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK)) == 0;
 			if (noSpecialModifiers && e.getKeyChar() != KeyEvent.CHAR_UNDEFINED
-					&& (e.getKeyChar() >= '0' || e.getKeyChar() == KeyEvent.VK_BACK_SPACE)) {
+											&& (e.getKeyChar() >= '0' || e.getKeyChar() == KeyEvent.VK_BACK_SPACE)) {
 				if (KeyEvent.KEY_TYPED == e.getID()) {
 					setVisible(true);
 				}
@@ -109,7 +110,6 @@ public class PopupTextField extends JDialog {
 			keyTyped(e);
 		}
 	}
-
 
 	public JTextField getTextField() {
 		return textField;
