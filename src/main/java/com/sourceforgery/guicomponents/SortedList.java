@@ -14,8 +14,6 @@ import java.util.regex.Pattern;
 import javax.swing.JList;
 
 import com.sourceforgery.nongui.Filter;
-import com.sourceforgery.nongui.InterruptableBackgroundWorkerHandler;
-import com.sourceforgery.nongui.Matchable;
 
 public class SortedList<T> extends JList {
 	private static final long serialVersionUID = 1L;
@@ -90,6 +88,10 @@ public class SortedList<T> extends JList {
 	public SaneListModel<T> getModel() {
 		return (SaneListModel<T>) super.getModel();
 	}
+	
+	public void clearItems() {
+		getModel().clear();
+	}
 
 	public void addAll(final Collection<T> items) throws InterruptedException {
 		getModel().addAll(items);
@@ -122,9 +124,6 @@ public class SortedList<T> extends JList {
 
 		@Override
 		public boolean isVisible(final T object) {
-			if (object instanceof Matchable) {
-				return p.matcher(((Matchable) object).toMatchable()).matches();
-			}
 			return p.matcher(object.toString()).matches();
 		};
 	}
