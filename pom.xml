@@ -7,7 +7,7 @@
 	<name>Gui components</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jdkVersion>1.6</jdkVersion>
+		<jdkVersion>1.7</jdkVersion>
 		<s3Bucket>sourceforgery</s3Bucket>
 	</properties>
 	<description>Reusable components for gui</description>
