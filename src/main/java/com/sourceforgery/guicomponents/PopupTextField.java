@@ -119,6 +119,10 @@ public class PopupTextField extends JDialog {
 		return textField.getText();
 	}
 
+	public void setText(String text) {
+		textField.setText(text);
+	}
+
 	@Override
 	public void setVisible(final boolean b) {
 		super.setVisible(b);
