@@ -1,6 +1,7 @@
 package com.sourceforgery.nongui;
 
 import static java.lang.Character.isDigit;
+import static java.lang.Character.isSpaceChar;
 import static java.lang.Character.toLowerCase;
 
 import java.io.Serializable;
@@ -9,13 +10,19 @@ import java.util.Comparator;
 public class AlphaNumericalSorter<T> implements Comparator<T>, Serializable {
 	private static final long serialVersionUID = 1L;
 	private final boolean caseInsensitive;
+	private final boolean ignoreSpacing;
 
 	public AlphaNumericalSorter(final boolean caseInsensitive) {
+		this(caseInsensitive, false);
+	}
+
+	public AlphaNumericalSorter(final boolean caseInsensitive, final boolean ignoreSpacing) {
 		this.caseInsensitive = caseInsensitive;
+		this.ignoreSpacing = ignoreSpacing;
 	}
 
 	public AlphaNumericalSorter() {
-		this(true);
+		this(true, true);
 	}
 
 	public String toString(final T x) {
@@ -32,6 +39,14 @@ public class AlphaNumericalSorter<T> implements Comparator<T>, Serializable {
 		int len2 = o2.length();
 		int diff = 0;
 		while (pos1 < len1 && pos2 < len2 && diff == 0) {
+			if (ignoreSpacing) {
+				while(pos1 < len1 && isSpaceChar(o1.charAt(pos1))) {
+					pos1++;
+				}
+				while(pos2 < len2 && isSpaceChar(o2.charAt(pos2))) {
+					pos2++;
+				}
+			}
 			char c1 = o1.charAt(pos1);
 			char c2 = o2.charAt(pos2);
 			if (isDigit(c1) && isDigit(c2)) {
