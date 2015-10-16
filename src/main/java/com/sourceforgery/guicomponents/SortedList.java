@@ -28,7 +28,7 @@ public class SortedList<T> extends JList {
 		super(listModel);
 		if (listModel.getFilter() == null || listModel.getFilter() == Filter.ALL_VISIBLE) {
 			try {
-				setFilter(new RegexFilter<T>());
+				setContainsFilter(new RegexFilter<T>());
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
 			}
@@ -52,7 +52,7 @@ public class SortedList<T> extends JList {
 		popupTextField.getActionListeners().add(new ActionListener() {
 			@Override
 			public void actionPerformed(final ActionEvent e) {
-				setFilter(".*" + e.getActionCommand() + ".*");
+				setMatchingFilter(".*" + e.getActionCommand() + ".*");
 			}
 		});
 		popupTextField.addDetectSearch();
@@ -97,11 +97,16 @@ public class SortedList<T> extends JList {
 		getModel().addAll(items);
 	}
 
-	public void setFilter(final Filter<T> filter) throws InterruptedException {
+	public void setContainsFilter(final Filter<T> filter) throws InterruptedException {
 		getModel().setFilter(filter);
 	}
 
-	public void setFilter(final String regex) {
+	public void setContainsFilter(final String regex) {
+		popupTextField.setText(regex);
+		setMatchingFilter(".*" + regex + ".*");
+	}
+
+	public void setMatchingFilter(String regex) {
 		RegexFilter<T> regexFilter = (RegexFilter<T>) getModel().getFilter();
 		regexFilter.setFilter(regex);
 		getModel().updateShown();
