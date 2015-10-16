@@ -8,7 +8,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class PropertyMap<K, V> extends Property<SortedMap<K, V>> implements SortedMap<K, V> {
-	public PropertyMap(SortedMap<K, V> map) {
+	public PropertyMap(final SortedMap<K, V> map) {
 		set(map);
 	}
 
@@ -27,22 +27,22 @@ public class PropertyMap<K, V> extends Property<SortedMap<K, V>> implements Sort
 	}
 
 	@Override
-	public boolean containsKey(Object key) {
+	public boolean containsKey(final Object key) {
 		return get().containsKey(key);
 	}
 
 	@Override
-	public boolean containsValue(Object value) {
+	public boolean containsValue(final Object value) {
 		return get().containsValue(value);
 	}
 
 	@Override
-	public V get(Object key) {
-		return get(key);
+	public V get(final Object key) {
+		return get().get(key);
 	}
 
 	@Override
-	public V put(K key, V value) {
+	public V put(final K key, final V value) {
 		V put = get().put(key, value);
 		boolean equals = equals(put, value);
 		if (!equals) {
@@ -52,7 +52,7 @@ public class PropertyMap<K, V> extends Property<SortedMap<K, V>> implements Sort
 	}
 
 	@Override
-	public V remove(Object key) {
+	public V remove(final Object key) {
 		V remove = get().remove(key);
 		if (remove != null) {
 			fireListeners(null, get());
@@ -61,7 +61,7 @@ public class PropertyMap<K, V> extends Property<SortedMap<K, V>> implements Sort
 	}
 
 	@Override
-	public void putAll(Map<? extends K, ? extends V> m) {
+	public void putAll(final Map<? extends K, ? extends V> m) {
 		get().putAll(m);
 		fireListeners(get(), get());
 	}
@@ -97,17 +97,17 @@ public class PropertyMap<K, V> extends Property<SortedMap<K, V>> implements Sort
 	}
 
 	@Override
-	public SortedMap<K, V> subMap(K fromKey, K toKey) {
+	public SortedMap<K, V> subMap(final K fromKey, final K toKey) {
 		return get().subMap(fromKey, toKey);
 	}
 
 	@Override
-	public SortedMap<K, V> headMap(K toKey) {
+	public SortedMap<K, V> headMap(final K toKey) {
 		return get().headMap(toKey);
 	}
 
 	@Override
-	public SortedMap<K, V> tailMap(K fromKey) {
+	public SortedMap<K, V> tailMap(final K fromKey) {
 		return get().tailMap(fromKey);
 	}
 
